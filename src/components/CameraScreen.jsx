@@ -1,12 +1,22 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState ,useCallback} from 'react';
 import Webcam from "react-webcam";
 import * as cam from "@mediapipe/camera_utils";
+import { FaceMesh } from "@mediapipe/face_mesh";
+import * as Facemesh from "@mediapipe/face_mesh";
 import {Holistic,POSE_CONNECTIONS, FACEMESH_TESSELATION, HAND_CONNECTIONS} from "@mediapipe/holistic";
+import { drawConnectors, drawLandmarks} from '@mediapipe/drawing_utils'
+import { Pose, LandmarkGrid, PoseConfig } from '@mediapipe/pose'
+const FACING_MODE_USER = "user";
+const FACING_MODE_ENVIRONMENT = "environment"
 function CameraScreen() {  
-  const [cameraEnabled, setCameraEnabled] = useState(false);
+  const [facingMode, setFacingMode] = useState("user");
   const videoRef = useRef();
     const webcamRef = useRef(null);
-    
+
+  
+    const toggleFacingMode = () => {
+      setFacingMode((prevMode) => prevMode === 'user' ? 'environment' : 'user');
+    };
     var camera = null;
     useEffect(() => {
      
@@ -23,7 +33,9 @@ function CameraScreen() {
             minTrackingConfidence: 0.5
           });
           function onResults(results){
+            
             console.log(results)
+
             
           }
           holistic.onResults(onResults);
@@ -34,7 +46,7 @@ function CameraScreen() {
         ) {
           camera = new cam.Camera(webcamRef.current.video, {
             onFrame: async () => {
-              await holistic.send({ image: webcamRef.current.video });
+              await holistic.send({ image: webcamRef.current.video,});
             },
             width: 640,
             height: 480,
@@ -46,9 +58,9 @@ function CameraScreen() {
         <center>
           <div className="App">
             <Webcam
-              ref={webcamRef}
+        videoConstraints={{ facingMode }}
+        ref={webcamRef}
               style={{
-                position: "absolute",
                 marginLeft: "auto",
                 marginRight: "auto",
                 left: 0,
@@ -58,7 +70,10 @@ function CameraScreen() {
                 width: 640,
                 height: 480,
               }}
-            />  </div>
+            />  </div> 
+            <div>
+            <button onClick={toggleFacingMode}>Switch camera</button>
+            </div>
             </center>
       )
 }
