@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import Webcam from "react-webcam";
 import * as cam from "@mediapipe/camera_utils";
 import HolisticModel from './HolisticModel';
+import SocketIoClient from './SocketIoClient';
 
 function CameraScreen() {  
   const [cameraEnabled, setCameraEnabled] = useState(false);
@@ -10,8 +11,12 @@ function CameraScreen() {
     
   var camera = null;
   useEffect(() => {
-     
-    const holistic = HolisticModel();
+    const socketClient = SocketIoClient();
+
+    const holistic = HolisticModel( res => {
+      socketClient.emit('request', res);
+      console.log(res);
+    });
 
     if (typeof webcamRef.current !== "undefined" && webcamRef.current !== null) {
       camera = new cam.Camera(webcamRef.current.video, {
