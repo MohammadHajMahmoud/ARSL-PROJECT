@@ -11,13 +11,13 @@ function CameraScreen() {
   const [facingMode, setFacingMode] = useState(FACING_MODE_USER);
   const webcamRef = useRef(null);
   var camera = null;
-  
+
   const toggleFacingMode = () => {
     setFacingMode( prevMode => prevMode === FACING_MODE_USER ? FACING_MODE_ENVIRONMENT : FACING_MODE_USER);
   };
 
   useEffect(() => {
-    const socketClient = SocketIoClient();
+    const socketClient = SocketIoClient( _ => {} );
 
     const holistic = HolisticModel( res => {
       socketClient.emit('request', res);
