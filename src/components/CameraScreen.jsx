@@ -1,15 +1,21 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState} from 'react';
 import Webcam from "react-webcam";
 import * as cam from "@mediapipe/camera_utils";
 import HolisticModel from './HolisticModel';
 import SocketIoClient from './SocketIoClient';
 
+const FACING_MODE_USER = "user";
+const FACING_MODE_ENVIRONMENT = "environment";
+
 function CameraScreen() {  
-  const [cameraEnabled, setCameraEnabled] = useState(false);
-  const videoRef = useRef();
+  const [facingMode, setFacingMode] = useState(FACING_MODE_USER);
   const webcamRef = useRef(null);
-    
   var camera = null;
+  
+  const toggleFacingMode = () => {
+    setFacingMode( prevMode => prevMode === FACING_MODE_USER ? FACING_MODE_ENVIRONMENT : FACING_MODE_USER);
+  };
+
   useEffect(() => {
     const socketClient = SocketIoClient();
 
@@ -32,9 +38,9 @@ function CameraScreen() {
     <center>
       <div className="App">
         <Webcam 
+        videoConstraints={{ facingMode }}
         ref={webcamRef}
-        style = {{
-          position: "absolute",
+        style={{
           marginLeft: "auto",
           marginRight: "auto",
           left: 0,
@@ -43,7 +49,11 @@ function CameraScreen() {
           zindex: 9,
           width: 640,
           height: 480,
-        }}/>
+          }}
+        />
+      </div>
+      <div>
+        <button onClick={toggleFacingMode}>Switch camera</button>
       </div>
     </center>
   )
