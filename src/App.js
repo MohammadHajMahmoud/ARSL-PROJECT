@@ -1,11 +1,18 @@
 
 import './App.css';
 import CameraScreen from './components/CameraScreen';
+import {BrowserRouter,Routes,Route} from "react-router-dom"
+import BotNavigation from './components/nav';
+import AvilableWords from './components/AvilableWords';
 function App() {
   return (
-    <div className="App">
-      <CameraScreen/>
-    </div>
+    <BrowserRouter>
+      <BotNavigation/>
+     <Routes>
+        <Route path ="/camera" element ={<CameraScreen/>}/>
+         <Route path='/AvilableWords' element={<AvilableWords/>}/>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
