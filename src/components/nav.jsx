@@ -17,7 +17,7 @@ export default function BotNavigation(){
         }}
       >
         <BottomNavigationAction label="Camera" onClick={()=>navigate("/camera")}/>
-        <BottomNavigationAction label="Request" />
+        <BottomNavigationAction label="Request" onClick={()=>navigate("/request")}/>
         <BottomNavigationAction label="Available words" onClick={()=>navigate("/avilableWords")}  />
       </BottomNavigation>
     </Box>

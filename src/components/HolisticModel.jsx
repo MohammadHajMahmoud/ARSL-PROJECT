@@ -1,6 +1,6 @@
 import {Holistic} from "@mediapipe/holistic";
 
-function HolisticModel(onResult = console.log){
+function HolisticModel(onResult){
 
     const BASE_PATH = 'https://cdn.jsdelivr.net/npm/@mediapipe/holistic/';
     const holistic = new Holistic({locateFile: file => `${BASE_PATH}${file}`});
