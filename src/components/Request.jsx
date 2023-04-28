@@ -12,7 +12,9 @@ function Request() {
   const [facingMode, setFacingMode] = useState(FACING_MODE_ENVIRONMENT);
   const webcamRef = useRef(null);
   var frames = [];
-  var isRecording = false;
+  // var isRecording = false;
+  // const [isRecording, setIsRecording] = useState(false);
+
   
   const toggleFacingMode = () => {
     setFacingMode((prevMode) =>
@@ -31,20 +33,13 @@ function Request() {
   const startRecoarding = () => {
     console.log("started recording")
     frames=[]
-    isRecording = true;
-    console.log("before sending to jolistic" + isRecording)
   };
 
 
 
   useEffect(() => {
-    if (timeLeft === -1)
+    if (timeLeft < 1)
       return
-    // Exit early when we reach 0
-    if (timeLeft === 0){
-      startRecoarding();
-      return;
-    }
 
     // Save intervalId to clear the interval when the component unmounts
     const intervalId = setInterval(() => {
@@ -55,22 +50,25 @@ function Request() {
     return () => clearInterval(intervalId);
   }, [timeLeft]);
 
+  useEffect(() => {
+    // Exit early when we reach 0
+    if (timeLeft === 0){
+      startRecoarding();
+    }
+
+  }, [timeLeft]);
+
+
+
 
   useEffect(() => {
-    console.log("yes epic")
+
     const holistic = HolisticModel((res) => {
-      if(frames.length!==30){
-        frames.push(formatResult(res))
-        console.log(frames)
-      }
-      else{
-          console.log(frames)
-          isRecording = false;
-          frames=[]
-      }
-      
-  });
-  
+      frames.push(formatResult(res))
+      console.log(frames)    
+    });
+
+    console.log("yes epic")
     while (!(
       typeof webcamRef.current !== "undefined" &&
       webcamRef.current !== null
@@ -79,7 +77,7 @@ function Request() {
     
       new cam.Camera(webcamRef.current.video, {
         onFrame: async () => {
-            if(isRecording){
+            if(frames.length < 30){
                 await holistic.send({ image: webcamRef.current.video })
             }
         },
