@@ -1,0 +1,15 @@
+
+.webc{
+    object-fit: cover;
+    width: 55%;
+    height: 94vh;
+    }
+    .webCon{
+    object-fit: cover;
+    }
+    @media (max-width: 1200px) {
+      .webc {
+        width: 100%;
+      }
+    }
+    

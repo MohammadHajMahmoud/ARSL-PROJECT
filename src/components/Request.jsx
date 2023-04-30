@@ -1,106 +1,109 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect,useCallback, useRef, useState } from "react";
 import Webcam from "react-webcam";
-import * as cam from "@mediapipe/camera_utils";
-import HolisticModel from "./HolisticModel";
-import formatResult from "./formatResult";
-import background from "./cssFile/flip-camera-icon-4.png";
-import "./cssFile/camera.css";
-const FACING_MODE_USER = "user";
-const FACING_MODE_ENVIRONMENT = "environment";
-const COUNTDOWN_TIMEOUT = 3;
-function Request() {
-  const [facingMode, setFacingMode] = useState(FACING_MODE_ENVIRONMENT);
-  const webcamRef = useRef(null);
-  var frames = [];
-  // var isRecording = false;
-  // const [isRecording, setIsRecording] = useState(false);
-
-  
-  const toggleFacingMode = () => {
-    setFacingMode((prevMode) =>
-      prevMode === FACING_MODE_USER ? FACING_MODE_ENVIRONMENT : FACING_MODE_USER
-    );
-  }
-
-
-  const [timeLeft, setTimeLeft] = useState(-1);
-
-  function startCountDown(){
-    setTimeLeft(COUNTDOWN_TIMEOUT);
-  }
-
-
-  const startRecoarding = () => {
-    console.log("started recording")
-    frames=[]
-  };
-
-
+import "./cssFile/request.css"
+export default function WebcamVideo() {
+  const [count, setCount] = useState(3);
+  const [isCounting, setIsCounting] = useState(false);
 
   useEffect(() => {
-    if (timeLeft < 1)
-      return
-
-    // Save intervalId to clear the interval when the component unmounts
-    const intervalId = setInterval(() => {
-      setTimeLeft(timeLeft - 1);
-    }, 1000);
-
-    // Clear intervalId when the component unmounts
-    return () => clearInterval(intervalId);
-  }, [timeLeft]);
-
-  useEffect(() => {
-    // Exit early when we reach 0
-    if (timeLeft === 0){
-      startRecoarding();
+    let timer;
+    if (isCounting && count > 0) {
+      timer = setInterval(() => {
+        setCount(count - 1);
+      }, 1000);
     }
+    return () => clearInterval(timer);
+  }, [isCounting, count]);
 
-  }, [timeLeft]);
+ 
 
+  const webcamRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+  const [capturing, setCapturing] = useState(false);
+  const [recordedChunks, setRecordedChunks] = useState([]);
 
+  const handleDataAvailable = useCallback(
+    ({ data }) => {
+      if (data.size > 0) {
+        setRecordedChunks((prev) => prev.concat(data));
+      }
+    },
+    [setRecordedChunks]
+  );
+const  startRecoarding =()=>{
+  setIsCounting(true);
+  setCount(3);
+  setTimeout(()=>{
+    handleStartCaptureClick()
+    setTimeout(()=>{
+      handleStopCaptureClick()
 
-
-  useEffect(() => {
-
-    const holistic = HolisticModel((res) => {
-      frames.push(formatResult(res))
-      console.log(frames)    
+    },2000)
+  },3000)
+}
+  const handleStartCaptureClick = useCallback(() => {
+    setCapturing(true);
+    mediaRecorderRef.current = new MediaRecorder(webcamRef.current.stream, {
+      mimeType: "video/webm",
     });
+    mediaRecorderRef.current.addEventListener(
+      "dataavailable",
+      handleDataAvailable
+    );
+    mediaRecorderRef.current.start();
+  }, [webcamRef, setCapturing, mediaRecorderRef, handleDataAvailable]);
 
-    console.log("yes epic")
-    while (!(
-      typeof webcamRef.current !== "undefined" &&
-      webcamRef.current !== null
-    ))
-; 
-    
-      new cam.Camera(webcamRef.current.video, {
-        onFrame: async () => {
-            if(frames.length < 30){
-                await holistic.send({ image: webcamRef.current.video })
-            }
-        },
-      }).start();
-    
-  }, []);
+  const handleStopCaptureClick = useCallback(() => {
+      mediaRecorderRef.current.stop()
+      setCapturing(false)
+  
+  }, [mediaRecorderRef, setCapturing]);
+
+  const handleDownload = useCallback(() => {
+    if (recordedChunks.length) {
+      const blob = new Blob(recordedChunks, {
+        type: "video/mp4",
+      });
+      console.log(blob)
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      document.body.appendChild(a);
+      a.style = "display: none";
+      a.href = url;
+      a.download = "react-webcam-stream-capture.mp4";
+      a.click();
+      window.URL.revokeObjectURL(url);
+      setRecordedChunks([]);
+    }
+  }, [recordedChunks]);
+
+  const videoConstraints = {
+    width: { ideal: 720 },
+    height: { ideal: 720 },
+    facingMode: "user",
+    frameRate: { ideal: 15, max: 15 }
+
+  };
 
   return (
     <center>
-      <div className="webCon">
-        <Webcam
-          className="webc"
-          videoConstraints={{ facingMode }}
-          ref={webcamRef}
-        />
-      </div>
-      <div>
-        <button onClick={startRecoarding}>Recoard</button>
-        <img src={background} onClick={toggleFacingMode} />
-        <h1>{timeLeft}</h1>
-      </div>
+  <div className="webCon">
+    <h1>{count}</h1>
+      <Webcam
+        className="webc"
+        style={{background:"cover"}}
+        audio={false}
+        mirrored={true}
+        ref={webcamRef}
+        videoConstraints={videoConstraints}
+      /> 
+        <button onClick={startRecoarding}>Start Capture</button>
+      {recordedChunks.length > 0 && (
+        <button onClick={handleDownload}>Download</button>
+      )}
+      
+    </div>
     </center>
+    
   );
 }
-
-export default Request ;
