@@ -34,13 +34,19 @@ function CameraScreen() {
     }
   }, []);
 
+  const videoConstraints = {
+    width: { ideal: 720 },
+    height: { ideal: 720 },
+    facingMode: facingMode,
+    frameRate: { ideal: 15, max: 15 }
+
+  };
   return (
     <center>
       <div className="webCon">
         <Webcam className='webc'
-        videoConstraints={{ facingMode }}
         ref={webcamRef}
-    
+        videoConstraints={videoConstraints}
         />
       </div>
       <div>
