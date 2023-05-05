@@ -16,19 +16,34 @@ function CameraScreen() {
   const toggleFacingMode = () => {
     setFacingMode( prevMode => prevMode === FACING_MODE_USER ? FACING_MODE_ENVIRONMENT : FACING_MODE_USER);
   };
-
+  
   useEffect(() => {
     const socketClient = SocketIoClient((word)=>{
       console.log(word)
     });
-
+    let frameNumber = 0;
     const holistic = HolisticModel( 
-      res => socketClient.emit('request', formatResult(res))
-      );
-
+      result => {
+        let requestBody = {
+          'frameNumber': frameNumber++,
+          'frame': formatResult(result),
+        };
+        socketClient.emit('request', requestBody)
+      });
+      
+    let isProcessing = false;
+    const onFrame = async () => {
+      if (!isProcessing) {
+        isProcessing = true;
+        setTimeout(async () => {
+          await holistic.send({ image: webcamRef.current.video });
+          isProcessing = false;
+        }, 33);
+      }
+    }
     if (typeof webcamRef.current !== "undefined" && webcamRef.current !== null) {
       new cam.Camera(webcamRef.current.video, {
-        onFrame: async () => await holistic.send({ image: webcamRef.current.video }),
+        onFrame: onFrame,
        
       }).start();
     }
@@ -39,13 +54,15 @@ function CameraScreen() {
     height: { ideal: 720 },
     facingMode: facingMode,
     frameRate: { ideal: 15, max: 15 }
-
   };
+  
   return (
     <center>
       <div className="webCon">
         <Webcam className='webc'
         ref={webcamRef}
+        audio={false}
+        mirrored = {true}
         videoConstraints={videoConstraints}
         />
       </div>
