@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import { useNavigate } from 'react-router-dom';
-
+import './cssFile/navCss.css'
 export default function BotNavigation(){
   const [value, setValue] = React.useState(0);
   const navigate=useNavigate()
@@ -16,9 +16,9 @@ export default function BotNavigation(){
           setValue(newValue);
         }}
       >
-        <BottomNavigationAction label="Camera" onClick={()=>navigate("/camera")}/>
-        <BottomNavigationAction label="Request" onClick={()=>navigate("/request")}/>
-        <BottomNavigationAction label="Available words" onClick={()=>navigate("/avilableWords")}  />
+        <BottomNavigationAction  label="ترجمة" onClick={()=>navigate("/camera")}/>
+        <BottomNavigationAction label="رفع اشارة" onClick={()=>navigate("/request")}/>
+        <BottomNavigationAction label="الاشارات المتاحة" onClick={()=>navigate("/avilableWords")}  />
       </BottomNavigation>
     </Box>
   );

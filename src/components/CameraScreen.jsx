@@ -10,16 +10,26 @@ const FACING_MODE_USER = "user";
 const FACING_MODE_ENVIRONMENT = "environment";
 
 function CameraScreen() {  
-  const [facingMode, setFacingMode] = useState(FACING_MODE_ENVIRONMENT);
+  const [facingMode, setFacingMode] = useState(FACING_MODE_USER);
+  let [responseText, setResponseText] = useState('');
+  let responseWords = []
   const webcamRef = useRef(null);
 
   const toggleFacingMode = () => {
-    setFacingMode( prevMode => prevMode === FACING_MODE_USER ? FACING_MODE_ENVIRONMENT : FACING_MODE_USER);
+    setFacingMode( prevMode => prevMode === FACING_MODE_ENVIRONMENT ? FACING_MODE_USER : FACING_MODE_ENVIRONMENT);
   };
   
   useEffect(() => {
     const socketClient = SocketIoClient((word)=>{
       console.log(word)
+      responseWords.push(word)
+      if(responseWords.length!=11){
+        responseText = setResponseText(responseWords.join(' '))
+      }else{
+        responseWords.shift();
+        responseText = setResponseText(responseWords.join(' '))
+      }
+      
     });
     let frameNumber = 0;
     const holistic = HolisticModel( 
@@ -63,11 +73,14 @@ function CameraScreen() {
         ref={webcamRef}
         audio={false}
         mirrored = {true}
-        videoConstraints={videoConstraints}
+        videoConstraints={FACING_MODE_USER}
         />
+        <div className ='resultCon'>
+        <textarea className='result'  value={responseText} readOnly />
+        </div>
       </div>
       <div>
-        <img src={background} onClick={toggleFacingMode}/>
+        <img className='imgToggle'src={background} onClick={toggleFacingMode}/>
       </div>
     </center>
   )
