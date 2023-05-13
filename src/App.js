@@ -10,9 +10,9 @@ function App() {
     <BrowserRouter>
       <BotNavigation/>
      <Routes>
-        <Route path ="/camera" element ={<CameraScreen/>}/>
-         <Route path='/AvilableWords' element={<AvilableWords/>}/>
-         <Route path='/request' element={<Request/>}/>
+        <Route path ="/translate" element ={<CameraScreen/>}/>
+         <Route path='/avilable-words' element={<AvilableWords/>}/>
+         <Route path='/upload-video' element={<Request/>}/>
       </Routes>
     </BrowserRouter>
   );
