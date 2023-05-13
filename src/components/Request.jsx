@@ -87,6 +87,9 @@ export default function Request() {
         <Webcam
           audio={false}
           ref={webcamRef}
+          videoConstraints = {{
+            frameRate: { ideal: 15, max: 15 }
+          }}
         />
       )}
       <div>
