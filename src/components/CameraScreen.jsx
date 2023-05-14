@@ -1,86 +1,68 @@
 import { useEffect, useRef, useState} from 'react';
-import Webcam from "react-webcam";
-import * as cam from "@mediapipe/camera_utils";
+import {Camera} from "@mediapipe/camera_utils";
 import HolisticModel from './HolisticModel';
 import SocketIoClient from './SocketIoClient';
 import formatResult from './formatResult';
 import background from "./cssFile/flip-camera-icon-4.png" 
 import "./cssFile/camera.css"
+
 const FACING_MODE_USER = "user";
 const FACING_MODE_ENVIRONMENT = "environment";
 
 function CameraScreen() {  
   const [facingMode, setFacingMode] = useState(FACING_MODE_USER);
-  let [responseText, setResponseText] = useState('');
-  let responseWords = []
-  const webcamRef = useRef(null);
+  const [responseWords, setResponseWords] = useState([]);
+  const videoRef = useRef(null);
+  const cameraRef = useRef(null);
 
-  const toggleFacingMode = () => {
-    setFacingMode( prevMode => prevMode === FACING_MODE_ENVIRONMENT ? FACING_MODE_USER : FACING_MODE_ENVIRONMENT);
-  };
   
   useEffect(() => {
-    const socketClient = SocketIoClient((word)=>{
-      console.log(word)
-      responseWords.push(word)
-      if(responseWords.length!=11){
-        responseText = setResponseText(responseWords.join(' '))
-      }else{
-        responseWords.shift();
-        responseText = setResponseText(responseWords.join(' '))
-      }
-      
+    const socketClient = SocketIoClient( (word) => {
+      setResponseWords((state) => [word].concat(state.slice(-9)));
     });
-    let frameNumber = 0;
-    const holistic = HolisticModel( 
-      result => {
-        let requestBody = {
-          'frameNumber': frameNumber++,
+
+    const holistic = HolisticModel( (result) => {
+        socketClient.emit('request', {
           'frame': formatResult(result),
-        };
-        socketClient.emit('request', requestBody)
+        });
       });
       
-    let isProcessing = false;
-    const onFrame = async () => {
-      if (!isProcessing) {
-        isProcessing = true;
-        setTimeout(async () => {
-          await holistic.send({ image: webcamRef.current.video });
-          isProcessing = false;
-        }, 33);
+    cameraRef.current = new Camera(videoRef.current , {
+      onFrame: async () => {
+          await holistic.send({ image: videoRef.current });
+      },
+      facingMode: facingMode,
+    });
+    cameraRef.current.start();
+  
+    return async () => {
+      socketClient.disconnect();
+      if (cameraRef.current) {
+        await cameraRef.current.stop();
       }
     }
-    if (typeof webcamRef.current !== "undefined" && webcamRef.current !== null) {
-      new cam.Camera(webcamRef.current.video, {
-        onFrame: onFrame,
-       
-      }).start();
-    }
   }, []);
-
-  const videoConstraints = {
-    width: { ideal: 720 },
-    height: { ideal: 720 },
-    facingMode: facingMode,
-    frameRate: { ideal: 15, max: 15 }
-  };
   
   return (
     <center>
       <div className="webCon">
-        <Webcam className='webc'
-        ref={webcamRef}
-        audio={false}
-        mirrored = {true}
-        videoConstraints={FACING_MODE_USER}
+        <video className='webc'
+        ref = {videoRef}
+        muted={true}
+        
         />
         <div className ='resultCon'>
-        <textarea className='result'  value={responseText} readOnly />
+        <textarea className='result' value={responseWords.join(' ')} readOnly />
         </div>
       </div>
       <div>
-        <img className='imgToggle'src={background} onClick={toggleFacingMode}/>
+        <img className='imgToggle' src={background} onClick={ () => {
+          setFacingMode( (prevMode) => 
+            prevMode === FACING_MODE_ENVIRONMENT ? 
+            FACING_MODE_USER : 
+            FACING_MODE_ENVIRONMENT
+            );
+        }}/>
       </div>
     </center>
   )

@@ -6,6 +6,7 @@ function SocketIoClient(onResponse = console.log){
     });
 
     socketio.on('connect', () => console.log('connected'));
+    socketio.on('disconnect', () => console.log('disconnected'));
 
     socketio.on('response', onResponse);
 
