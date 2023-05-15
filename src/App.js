@@ -15,7 +15,7 @@ function App() {
         <Route path ="/translate" element ={<CameraScreen/>}/>
          <Route path='/available-words' element={<AvailableWords/>}/>
         <Route path='/request-sign' element={<Request/>}/>
-         <Route path='/avilable-words' element={<AvilableWords/>}/>
+         <Route path='/available-words' element={<AvailableWords/>}/>
          <Route path='/upload-video/:word' element={<UploadVideo/>}/>
       </Routes>
     </BrowserRouter>

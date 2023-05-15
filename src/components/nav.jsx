@@ -24,7 +24,7 @@ export default function BotNavigation(){
       >
         <BottomNavigationAction label={<span className="bottomNavLabel">ترجمة</span>} onClick={()=>navigate("/translate")}/>
         <BottomNavigationAction label={<span className="bottomNavLabel">رفع اشارة</span>} onClick={()=>navigate("/request-sign")}/>
-        <BottomNavigationAction label={<span className="bottomNavLabel">الاشارات المتاحة</span>} onClick={()=>navigate("/avilable-words")}  />
+        <BottomNavigationAction label={<span className="bottomNavLabel">الاشارات المتاحة</span>} onClick={()=>navigate("/available-words")}  />
       </BottomNavigation>
     </Box>
     
