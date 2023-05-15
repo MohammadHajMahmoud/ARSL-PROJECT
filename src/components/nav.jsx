@@ -16,9 +16,9 @@ export default function BotNavigation(){
           setValue(newValue);
         }}
       >
-        <BottomNavigationAction  label="ترجمة" onClick={()=>navigate("/translate")}/>
+        <BottomNavigationAction label="ترجمة" onClick={()=>navigate("/translate")}/>
         <BottomNavigationAction label="رفع إشارة" onClick={()=>navigate("/upload-video")}/>
-        <BottomNavigationAction label="الإشارات المتاحة" onClick={()=>navigate("/avilable-words")}  />
+        <BottomNavigationAction label="الإشارات المتاحة" onClick={()=>navigate("/available-words")}  />
       </BottomNavigation>
     </Box>
   );

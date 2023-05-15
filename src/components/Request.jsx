@@ -1,7 +1,8 @@
 import React, { useEffect,useCallback, useRef, useState } from "react";
 import axios from "axios";
 import Webcam from "react-webcam";
-import "./cssFile/request.css"
+import "./cssFile/request.css";
+
 export default function Request() {
   const [count, setCount] = useState(3);
   const [isCounting, setIsCounting] = useState(false);
@@ -52,13 +53,13 @@ export default function Request() {
       
       const formData = new FormData();
       formData.append('video', blob, 'video.mp4');
-       formData.append('title', 'My video title');
-       axios.defaults.withCredentials = true;
-  axios.post('http://localhost:8080/video', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    }
-  })
+      formData.append('title', 'My video title');
+      axios.defaults.withCredentials = true;
+      axios.post('http://localhost:8080/video', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
       setRecordedChunks([]);
     }
   }, [recordedChunks]);
