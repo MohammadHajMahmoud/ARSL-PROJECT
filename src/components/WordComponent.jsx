@@ -24,7 +24,7 @@ function WordComponent( {word} ) {
                     .then( (response) => {
                         const arrayBuffer = response.data;
                         const blob = new Blob([arrayBuffer], { type: 'video/mp4' });
-                            setDemo(URL.createObjectURL(blob));
+                        setDemo(URL.createObjectURL(blob));
                     });
             }}
             onRequestClose={() => setIsViewingDemo(false) }>
