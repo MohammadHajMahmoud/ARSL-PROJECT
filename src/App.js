@@ -5,7 +5,6 @@ import {BrowserRouter,Routes,Route} from "react-router-dom"
 import BotNavigation from './components/nav';
 import AvilableWords from './components/AvilableWords';
 import Request from './components/Request'
-import RequestedWord from './components/requestedWord';
 import UploadVideo from './components/uploadVideo';
 function App() {
   return (
