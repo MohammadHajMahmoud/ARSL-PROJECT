@@ -5,6 +5,7 @@ import {BrowserRouter,Routes,Route} from "react-router-dom"
 import BotNavigation from './components/nav';
 import AvailableWords from './components/AvailableWords';
 import Request from './components/Request'
+import UploadVideo from './components/uploadVideo';
 
 function App() {
   return (
@@ -13,7 +14,9 @@ function App() {
      <Routes>
         <Route path ="/translate" element ={<CameraScreen/>}/>
          <Route path='/available-words' element={<AvailableWords/>}/>
-         <Route path='/upload-video' element={<Request/>}/>
+        <Route path='/request-sign' element={<Request/>}/>
+         <Route path='/avilable-words' element={<AvilableWords/>}/>
+         <Route path='/upload-video/:word' element={<UploadVideo/>}/>
       </Routes>
     </BrowserRouter>
   );
