@@ -13,10 +13,9 @@ function App() {
       <BotNavigation/>
      <Routes>
         <Route path ="/translate" element ={<CameraScreen/>}/>
-         <Route path='/available-words' element={<AvailableWords/>}/>
+        <Route path='/available-words' element={<AvailableWords/>}/>
         <Route path='/request-sign' element={<Request/>}/>
-         <Route path='/available-words' element={<AvailableWords/>}/>
-         <Route path='/upload-video/:word' element={<UploadVideo/>}/>
+        <Route path='/upload-video/:word' element={<UploadVideo/>}/>
       </Routes>
     </BrowserRouter>
   );
