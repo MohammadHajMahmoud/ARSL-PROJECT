@@ -18,7 +18,7 @@ function CameraScreen() {
   
   useEffect(() => {
     const socketClient = SocketIoClient( (word) => {
-      setResponseWords((state) => [word].concat(state.slice(-9)));
+      setResponseWords((state) => state.slice(-4).concat(word));
     });
 
     const holistic = HolisticModel( (result) => {
@@ -35,10 +35,10 @@ function CameraScreen() {
     });
     cameraRef.current.start();
   
-    return async () => {
+    return () => {
       socketClient.disconnect();
       if (cameraRef.current) {
-        await cameraRef.current.stop();
+        cameraRef.current.stop();
       }
     }
   }, []);

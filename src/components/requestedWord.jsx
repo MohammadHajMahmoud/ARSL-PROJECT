@@ -1,5 +1,5 @@
 import React from "react";
-import "./cssFile/avilableWords.css";
+import "./cssFile/availableWords.css";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 function RequestedWord({ word }) {
   return (
