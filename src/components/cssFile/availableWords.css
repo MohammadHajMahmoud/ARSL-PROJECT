@@ -73,6 +73,16 @@ body {
   cursor: pointer;
 }
 
+.popup {
+  position: absolute;
+  inset: 10rem;
+  background: rgba(190, 233, 252, 0.214);
+  overflow: auto;
+  padding: 2rem;
+  justify-content: center;
+  align-content: center;
+}
+
 .link{
 text-decoration: none;
 }
