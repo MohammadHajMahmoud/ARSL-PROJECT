@@ -37,6 +37,7 @@ function CameraScreen() {
   
     return () => {
       socketClient.disconnect();
+      holistic.close();
       if (cameraRef.current) {
         cameraRef.current.stop();
       }
