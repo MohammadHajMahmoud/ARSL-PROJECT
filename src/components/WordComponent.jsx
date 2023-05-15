@@ -25,13 +25,13 @@ function WordComponent( {word} ) {
                 {word} 
             </span>
                      
-            <ReactModal
-            className={"popup"}
+            <ReactModal className={"popup"}
             isOpen={isViewingDemo}
             contentLabel="word demo"
             onRequestClose={() => setIsViewingDemo(false) }>
 
-                <video controls>
+                <video 
+                autoPlay muted loop>
                     <source src={demo} type={demoType} />
                     Your browser does not support the video tag.
                 </video>
