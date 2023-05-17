@@ -8,9 +8,8 @@ function AvailableWords(){
     const [words, setWords] = useState([]);
 
     useEffect( () => {
-        persistenceApi.get("/actions")
+        persistenceApi.get("/actions", { params: { status: "available" } })
             .then( (response) => {
-                console.log(response.data);
                 setWords(response.data.map( (wordObject) => wordObject.name));
             });
     }, []);
