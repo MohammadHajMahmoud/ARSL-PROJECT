@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import RequestedWord from "./requestedWord";
 import SmoothList from 'react-smooth-list';
+import React, { useEffect, useState } from "react";
 import "./cssFile/availableWords.css"
 import { persistenceApi } from "./apis";
 

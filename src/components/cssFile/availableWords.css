@@ -73,16 +73,22 @@ body {
   cursor: pointer;
 }
 
-.popup {
-  position: absolute;
-  inset: 10rem;
-  background: rgba(190, 233, 252, 0.214);
-  overflow: auto;
-  padding: 2rem;
-  justify-content: center;
-  align-content: center;
-}
+
 
 .link{
 text-decoration: none;
+}
+
+.popup{
+width: 50%;
+margin: auto;
+
+}
+.vod{
+  position: relative;
+  margin-top: 15px;
+display: flex;
+justify-content: center;
+align-items: center;
+object-fit: contain;
 }

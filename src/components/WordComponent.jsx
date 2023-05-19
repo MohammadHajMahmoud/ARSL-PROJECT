@@ -29,13 +29,15 @@ function WordComponent( {word} ) {
             isOpen={isViewingDemo}
             contentLabel="word demo"
             onRequestClose={() => setIsViewingDemo(false) }>
-
+                <div className="vod">
                 <video 
                 autoPlay muted loop>
                     <source src={demo} type={demoType} />
                     Your browser does not support the video tag.
                 </video>
             
+                </div>
+               
             </ReactModal>
         </li>
         );
