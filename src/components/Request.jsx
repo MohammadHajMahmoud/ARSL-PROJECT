@@ -1,9 +1,17 @@
-import React from "react";
 import RequestedWord from "./requestedWord";
 import SmoothList from 'react-smooth-list';
+import React, { useEffect, useState } from "react";
 import "./cssFile/availableWords.css"
+import {persistenceApi} from './apis';
 function Request(){
-    const words =["ahmad","mohsen","mohammad","saba7"]
+    const[words,setWords] = useState([])
+    useEffect( () => {
+        persistenceApi.get("/actions")
+            .then( (response) => {
+                console.log(response.data);
+                setWords(response.data.map( (wordObject) => wordObject.name));
+            });
+    }, []);    
     const wordsList= words.map(word=><RequestedWord word={word}/>)
     return(
         

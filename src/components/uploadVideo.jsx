@@ -63,7 +63,7 @@ export default function UploadVideo() {
       formData.append("video", blob, "video.mp4");
       formData.append("title", word);
       axios.defaults.withCredentials = true;
-      axios.post("http://localhost:8080/video", formData, {
+      axios.post(`http://localhost:8080/actions/${word}/videos`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
