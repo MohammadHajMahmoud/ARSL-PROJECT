@@ -1,19 +1,14 @@
-import React, { useEffect, useCallback, useRef, useState } from "react";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Link,
-  useParams,
-} from "react-router-dom";
-
+import React, { useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import Webcam from "react-webcam";
 import "./cssFile/request.css";
+
 export default function UploadVideo() {
   let {word} = useParams();
   const [count, setCount] = useState(3);
   const [isCounting, setIsCounting] = useState(false);
+
   useEffect(() => {
     let timer;
     if (isCounting && count > 0) {
@@ -61,9 +56,8 @@ export default function UploadVideo() {
 
       const formData = new FormData();
       formData.append("video", blob, "video.mp4");
-      formData.append("title", word);
       axios.defaults.withCredentials = true;
-      axios.post("http://localhost:8080/video", formData, {
+      axios.post(`http://localhost:8080/actions/${word}/videos`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -86,7 +80,7 @@ export default function UploadVideo() {
       handleStartCaptureClick();
       setTimeout(() => {
         handleStopCaptureClick();
-      }, 2000);
+      }, 2200);
     }, 3000);
   };
   return (
