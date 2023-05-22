@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import Webcam from "react-webcam";
 import "./cssFile/request.css";
+import { ToastContainer,toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function UploadVideo() {
   let {word} = useParams();
@@ -48,7 +50,7 @@ export default function UploadVideo() {
     mediaRecorderRef.current.stop();
   }, [mediaRecorderRef]);
 
-  const handleDownload = React.useCallback(() => {
+  const handleUpload = React.useCallback(() => {
     if (recordedChunks.length) {
       const blob = new Blob(recordedChunks, {
         type: "video/webm",
@@ -61,7 +63,9 @@ export default function UploadVideo() {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      });
+      }).then((response)=>{
+      toast.success("تم الرفع بنجاح",{position:toast.POSITION.TOP_CENTER, autoClose: 1000})
+    })
       setRecordedChunks([]);
     }
   }, [recordedChunks]);
@@ -77,14 +81,17 @@ export default function UploadVideo() {
     setIsCounting(true);
     setCount(3);
     setTimeout(() => {
+      toast.info("جاري التصوير",{position:toast.POSITION.TOP_CENTER, autoClose: 1500})
       handleStartCaptureClick();
       setTimeout(() => {
+        toast.info("انتهى التصوير",{position:toast.POSITION.TOP_CENTER, autoClose: 1000})
         handleStopCaptureClick();
       }, 2200);
     }, 3000);
   };
   return (
     <div className="reqWebCon">
+      <ToastContainer/>
       {!showVideo && <div className="cnt">{count}</div>}
       {!showVideo && (
         <Webcam
@@ -110,23 +117,23 @@ export default function UploadVideo() {
       <div className="reQbuttons">
         {!showVideo && (
           <button className="bot" onClick={startRecoarding}>
-            Start Recording
+            ابدأ العد التنازلي للتصوير 
           </button>
         )}
 
-        {!showVideo && (
+        {!showVideo && recordedChunks.length > 0 && (
           <button className="bot" onClick={handleShowVideo}>
-            Show Video
+            اظهر الفيديو المصور
           </button>
         )}
         {showVideo && (
           <button className="bot" onClick={handleHideVideo}>
-            Go back to camera
+          رجوع للكاميرا
           </button>
         )}
         {!showVideo && recordedChunks.length > 0 && (
-          <button className="bot" onClick={handleDownload}>
-            submit
+          <button className="bot" onClick={handleUpload}>
+            رفع الفيديو
           </button>
         )}
       </div>
